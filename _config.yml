@@ -1,3 +1,7 @@
-remote_theme: pages-themes/modernist@v0.2.0
+remote_theme: pages-themes/cayman@v0.2.0
 plugins:
 - jekyll-remote-theme
+
+title: League of Legends ADC Impact Analysis
+description: Analyzing how ADC gold leads at 15 minutes impact professional match outcomes
+show_downloads: false
