@@ -152,14 +152,13 @@ We **reject the null hypothesis**. There is strong evidence that ADC gold leads 
 
 ## Baseline Model
 
-**Model:** Logistic Regression with 3 features
-- `golddiffat15` (quantitative)
-- `xpdiffat15` (quantitative)
-- `csdiffat15` (quantitative)
+**Model:** Logistic Regression with **2 features**
+- `xpdiffat15`
+- `csdiffat15`
 
-**Performance:**
-- Test Accuracy: **68.4%**
-- Test F1-Score: **66.6%**
+**Performance (two-feature baseline):**
+- Test Accuracy: **~75%**
+- Test F1-Score: **~75%**
 
 ---
 
@@ -177,9 +176,9 @@ We **reject the null hypothesis**. There is strong evidence that ADC gold leads 
 - `max_depth`: 15
 - `min_samples_split`: 2
 
-**Performance:**
-- Test Accuracy: **78.6%** (+10.2% improvement)
-- Test F1-Score: **78.2%** (+11.6% improvement)
+**Performance (with engineered features):**
+- Test Accuracy: **~75.2%** (+~0.5% over the two-feature baseline)
+- Test F1-Score: **~75.3%** (+~0.5% over the two-feature baseline)
 
 <iframe
   src="assets/confusion_matrix.html"
