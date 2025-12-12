@@ -247,8 +247,8 @@ We **fail to reject the null hypothesis**. The model is fair across game types.
 
 Key findings:
 1. ADC gold leads at 15 min predict wins (~31% difference)
-2. Early-game prediction achieves ~79% accuracy
-3. Feature engineering improves performance by 10+ percentage points
+2. Early-game prediction achieves ~75% accuracy
+3. Feature engineering improves performance by about 3 percentage points over the baseline
 4. Model performs fairly across different game states
 
 ---
