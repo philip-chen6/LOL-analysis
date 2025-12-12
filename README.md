@@ -117,7 +117,9 @@ We believe that **`golddiffat15`, `xpdiffat15`, and `csdiffat15`** are likely **
   frameborder="0"
 ></iframe>
 
-**Result:** p-value < 0.001 - Missingness DEPENDS on league.
+**Results:**  
+- League: p-value < 0.005 — Missingness DEPENDS on league  
+- Result: p-value ≈ 1.0 — Missingness does NOT depend on result
 
 ---
 
@@ -157,8 +159,8 @@ We **reject the null hypothesis**. There is strong evidence that ADC gold leads 
 - `csdiffat15`
 
 **Performance (two-feature baseline):**
-- Test Accuracy: **~75%**
-- Test F1-Score: **~75%**
+- Test Accuracy: **~72%**
+- Test F1-Score: **~72%**
 
 ---
 
@@ -177,8 +179,8 @@ We **reject the null hypothesis**. There is strong evidence that ADC gold leads 
 - `min_samples_split`: 2
 
 **Performance (with engineered features):**
-- Test Accuracy: **~75.2%** (+~0.5% over the two-feature baseline)
-- Test F1-Score: **~75.3%** (+~0.5% over the two-feature baseline)
+- Test Accuracy: **~75%** (+~3 percentage points over the two-feature baseline)
+- Test F1-Score: **~75%** (+~3 percentage points over the two-feature baseline)
 
 <iframe
   src="assets/confusion_matrix.html"
