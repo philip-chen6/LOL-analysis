@@ -44,13 +44,13 @@ The dataset contains **approximately 150,000 rows** (12 rows per game: 10 player
 ## Data Cleaning and Exploratory Data Analysis
 
 ### Data Cleaning
+Our data cleaning process involved several key steps tied to the data generating process:
 
-Our data cleaning process involved several key steps:
+1. **Selected relevant columns** – Focused on gameplay metrics needed for our questions to reduce noise.
+2. **Filtered for data completeness** – Removed rows marked incomplete and games ending before 15 minutes; early surrenders don’t generate 15-minute stats, and including them would bias toward short games.
+3. **Separated player and team data** – Team rows have position `team`; player rows are positions. This prevents aggregating team summaries with individual stats.
+4. **Handled missing values** – Kept only rows with 15-minute data for analyses that require it, so metrics are comparable across games.
 
-1. **Selected relevant columns** - We focused on gameplay metrics relevant to our analysis
-2. **Filtered for data completeness** - Removed rows marked as incomplete
-3. **Separated player and team data** - Kept both for different analyses
-4. **Handled missing values** - Filtered to include only games with 15-minute data
 
 Here's the head of our cleaned dataset:
 
@@ -100,6 +100,8 @@ Teams whose ADC has a gold lead at 15 minutes win approximately **65-70%** of ga
 | bot | Loss | 3.2 | 4.8 | 5.1 |
 | bot | Win | 5.8 | 2.3 | 7.2 |
 
+This table shows winning ADCs (bot) have much stronger KDA averages than losing ADCs, highlighting how ADC performance correlates with team success.
+
 ---
 
 ## Assessment of Missingness
@@ -107,6 +109,8 @@ Teams whose ADC has a gold lead at 15 minutes win approximately **65-70%** of ga
 ### NMAR Analysis
 
 We believe that **`golddiffat15`, `xpdiffat15`, and `csdiffat15`** are likely **NMAR** because they're missing when games end before 15 minutes. The missingness depends on game duration, which is not directly observed.
+
+Additional data like match duration or surrender flags would help explain the missingness, potentially making it MAR instead.
 
 ### Missingness Dependency
 
@@ -128,6 +132,9 @@ We believe that **`golddiffat15`, `xpdiffat15`, and `csdiffat15`** are likely **
 **Hypotheses:**
 - **H₀:** Teams with ADC gold lead win at the same rate as teams without
 - **H₁:** Teams with ADC gold lead win more often
+
+**Significance level:** α = 0.05  
+**Test statistic:** Difference in win rates (ADC gold lead vs no lead), which directly measures the effect size we care about.
 
 <iframe
   src="assets/hypothesis_test_permutation.html"
@@ -158,9 +165,13 @@ We **reject the null hypothesis**. There is strong evidence that ADC gold leads 
 - `xpdiffat15`
 - `csdiffat15`
 
+All features are quantitative; no categorical encodings are needed. Implemented as an sklearn `Pipeline` with `StandardScaler` + `LogisticRegression`.
+
 **Performance (two-feature baseline):**
 - Test Accuracy: **~72%**
 - Test F1-Score: **~72%**
+
+**Is it good?** Reasonable for a minimal resource-only baseline; leaves room to improve by adding gold-based and engineered features.
 
 ---
 
@@ -173,6 +184,11 @@ We **reject the null hypothesis**. There is strong evidence that ADC gold leads 
 2. `total_resource_lead` - Combined advantage metric
 3. `golddiffat10` - Earlier game state (if available)
 
+**Why these features?**  
+- Gold/XP ratio captures efficiency of resource conversion.  
+- Total resource lead aggregates normalized gold/XP/CS to summarize early strength.  
+- 10-minute gold diff captures trajectory/tempo before 15 minutes.
+
 **Best Hyperparameters:**
 - `n_estimators`: 100
 - `max_depth`: 15
@@ -181,6 +197,10 @@ We **reject the null hypothesis**. There is strong evidence that ADC gold leads 
 **Performance (with engineered features):**
 - Test Accuracy: **~75%** (+~3 percentage points over the two-feature baseline)
 - Test F1-Score: **~75%** (+~3 percentage points over the two-feature baseline)
+
+**Tuning:** GridSearchCV over depth/estimators/min_samples_split.  
+**Why RF?** Handles nonlinear interactions without heavy preprocessing and is robust to mixed-scale quantitative features.  
+**Why it improved:** Added gold-based signals and aggregated resource measures capture early-game advantage better than XP/CS alone.
 
 <iframe
   src="assets/confusion_matrix.html"
@@ -205,6 +225,10 @@ We **reject the null hypothesis**. There is strong evidence that ADC gold leads 
 **Groups:**
 - Close games: |golddiffat15| ≤ 2000
 - Stomp games: |golddiffat15| > 2000
+
+**Hypotheses (α = 0.05):**  
+- H₀: Accuracy is the same for close and stomp games.  
+- H₁: Accuracy differs between close and stomp games.
 
 <iframe
   src="assets/fairness_analysis.html"
